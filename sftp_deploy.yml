@@ -1,0 +1,64 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sftp-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sftp-server
+  template:
+    metadata:
+      labels:
+        app: sftp-server
+    spec:
+      nodeSelector:
+        sftp-1616: "true"
+      containers:
+      - name: sftp
+        image: 379436032080.dkr.ecr.us-west-2.amazonaws.com/enet:sftp.150625
+        securityContext:
+          privileged: true
+        volumeMounts:
+          - name: sftp-data
+            mountPath: /home/demo
+          - name: audit-logs
+            mountPath: /var/log/sftp
+          - name: sshd-config
+            mountPath: /etc/ssh/sshd_config
+            subPath: sshd_config
+          - name: rsyslog-config
+            mountPath: /etc/rsyslog.conf
+            subPath: rsyslog.conf
+      - name: fluent-bit
+        image: 379436032080.dkr.ecr.us-west-2.amazonaws.com/enet:fluent-bit.1206
+        securityContext:
+          privileged: true
+        volumeMounts:
+          - name: audit-logs
+            mountPath: /audit-logs
+      - name: debug
+        image: 379436032080.dkr.ecr.us-west-2.amazonaws.com/enet:busybox.1506
+        command: ["sleep", "3600"]
+        volumeMounts:
+          - name: audit-logs
+            mountPath: /audit-logs
+      volumes:
+        - name: sftp-data
+          persistentVolumeClaim:
+            claimName: sftp-data-pvc
+        - name: audit-logs
+          persistentVolumeClaim:
+            claimName: audit-logs-pvc
+        - name: sshd-config
+          configMap:
+            name: sftp-sshd-config
+            items:
+              - key: sshd_config
+                path: sshd_config
+        - name: rsyslog-config
+          configMap:
+            name: sftp-rsyslog-config
+            items:
+              - key: rsyslog.conf
+                path: rsyslog.conf
