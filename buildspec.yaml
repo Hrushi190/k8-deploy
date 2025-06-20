@@ -1,0 +1,14 @@
+version: 0.2
+
+phases:
+  install:
+    commands:
+      - aws eks update-kubeconfig --region $AWS_DEFAULT_REGION --name $EKS_CLUSTER_NAME
+  build:
+    commands:
+      - kubectl apply -f sftp_cm.yml -n local
+      - kubectl apply -f sftp_pvc.yaml -n local
+      - kubectl apply -f sftp_deploy.yml -n local
+      - kubectl apply -f sftp_svc.yaml -n local
+artifacts:
+  files: []
