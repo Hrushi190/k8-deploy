@@ -2,9 +2,12 @@ version: 0.0
 os: linux
 files:
   - source: .
-    destination: /home/ec2-user/app
+    destination: /home/ec2-user/pipeline/
+permissions:
+  - object: /home/ec2-user/pipeline/
+    mode: 777
 hooks:
-  BeforeInstall:
-    - location: scripts/deploy.sh
+  ApplicationStart:
+    - location: /home/ec2-user/pipeline/deploy.sh
       timeout: 300
       runas: ec2-user
