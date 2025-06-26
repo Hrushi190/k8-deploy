@@ -6,8 +6,6 @@ hooks:
   ApplicationStart:
     - location: deploy.sh
       timeout: 300
-      runas: ec2-use
   ValidateService:
     - location: validate.sh
       timeout: 300
-      runas: ec2-user
