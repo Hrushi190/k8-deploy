@@ -1,11 +1,10 @@
 version: 0.0
 
 phases:
-  #pre_build:
-  #  commands:
-  #    - echo Setting up kubeconfig...
-  #    - aws eks update-kubeconfig --region $AWS_REGION --name $EKS_CLUSTER_NAME
   build:
     commands:
       - echo Applying Kubernetes manifests...
-      - kubectl apply -f k8s/
+      - pwd
+      - ls -lrt
+      - echo "Checking for k8s directory..."
+      - if [ -d "k8s" ]; then echo "k8s directory found, running deploy.sh..."; bash ~/deploy.sh; else echo "k8s directory not found, skipping deploy.sh"; fi
