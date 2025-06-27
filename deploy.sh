@@ -1,6 +1,6 @@
 #!/bin/bash
-set -e
 # Set up kubeconfig for EKS
+export KUBECONFIG=/home/ec2-user/.kube/config
 aws eks update-kubeconfig --region us-west-2 --name demo-mde
 
 echo "Running K8 deployment/....."
