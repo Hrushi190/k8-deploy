@@ -1,11 +1,11 @@
-version: 0.0
+version: 0.2
 files:
   - source: .
     destination: /home/ec2-user/pipeline/
 hooks:
   ApplicationStart:
     - location: deploy.sh
-      timeout: 300
+      timeout: 600
   ValidateService:
     - location: validate.sh
-      timeout: 300
+      timeout: 600
